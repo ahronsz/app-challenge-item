@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: app-challenge-item
+  r2dbc:
+    url: 'r2dbc:h2:mem:///testdb;DB_CLOSE_DELAY=-1'
+    username: sa
+    password: sa
+    pool:
+      initial-size: 1
+      max-size: 2
+      validation-query: SELECT 1
+  h2:
+    console:
+      enabled: true

@@ -1,0 +1,532 @@
+openapi: 3.0.3
+info:
+  title: Api prueba técnica
+  description: |-
+    Microservicio que contiene 7 endpoints.
+  version: 1.0.0
+externalDocs:
+  description: Repositorio del proyecto
+  url: https://github.com/ahronsz/app-challenge-item
+paths:
+  /items:
+    get:
+      tags:
+        - Items invetory
+      summary: Lista todos los items
+      description: |-
+        ### Acerca de la funcionalidad expuesta 
+        Permite obtener el listado de la información de los items y tambien como opción por estado.
+        
+        ### Data de Prueba
+        | Query Parameters | Desarrollo | Certificación |
+        |------------------|------------|---------------|
+        | status | CREATED | CREATED |
+        
+        ### Precondiciones para el consumo de esta versión de la API
+        Ninguno.
+        
+        ### Usos válidos de Query Parameters
+        | Resultado Esperado | Path Param | Query Parameters requeridos |
+        |--------------------|------------|-----------------------------|
+        | El listado de items por status | No | status |
+        
+        ### Variantes válidas del Payload (Cuerpo del mensaje) 
+        Ninguno.
+        
+        ### Lista de Valores usadas en esta versión de la API
+        | Campo | Código | Descripción |
+        |------------|------------|---------------|
+        | status | CREATED | Status del item |
+        
+        ### Códigos de error usados en esta versión de la API
+        | Código | HTTP Status | Descripción |
+        |--------|-------------|-------------|
+        | TL0003 | 400 | Los datos proporcionados no son validos. |
+        | TL0004 | 500 | El servicio no se encuentra disponible. Por favor reintente mas tarde. |
+        | TL0011 | 401 | No esta autorizado correctamente para ejecutar esta operacion. |
+        | TL9999 | 500 | Ocurrio un error inesperado. Por favor contactarse con el Soporte Tecnico. |
+      parameters:
+        - name: status
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: ['WAITING', 'CREATED', 'DELETED']
+            example: WAITING
+      operationId: listItems
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ItemResponse'
+        '204':
+          description: No se encontraron resultados para los parametros enviados.        
+        '400':
+          description: Invalid arguments
+        '401':
+          description: Not authorized
+        '404':
+          description: No found
+        '500':
+          description: Internal server error
+    post:
+      tags:
+        - Items invetory
+      summary: Registra un item.
+      description: |-
+        ### Acerca de la funcionalidad expuesta
+        Permite la creación de un item con los campos minimos requeridos.
+        
+        ### Data de Prueba
+        No aplica.
+        
+        ### Precondiciones para el consumo de esta versión de la API
+        Ninguno.
+        
+        ### Usos válidos de Query Parameters
+        No aplica.
+
+        ### Variantes válidas del Payload (Cuerpo del mensaje) 
+        ```json
+          {
+            "name": "Coca Cola",
+            "clientName": "Genaro",
+            "typeName": "BeBidA",
+            "capacity": "1000gR",
+            "container": "BoTelLa"
+          }
+        ```
+        
+        ### Lista de Valores usadas en esta versión de la API
+        | Código | Descripción |
+        |------------|---------------|
+        | BEBIDA | ítem de tipo bebida |
+        | COMIDA | ítem de tipo comida |
+        | SALSAS | ítem de tipo salsas |
+        | ESPECIAS | ítem de tipo especias |
+        | 1000GR | ítem con capacidad de 100 gramos |
+        | 100GR | ítem con capacidad de 1000 gramos |
+        | BOTELLA | ítem con envase de una botella |
+        | CAJA | ítem con envase de una caja |
+        
+        ### Descripción de atributos
+        | Campo | Descripción |
+        |------------|------------|
+        | name | Nombre del item. |
+        | clientName | El nombre del cliente que ha lanzado el comando de creación. |
+        | typeName | Nombre del tipo del item. |
+        | capacity | Cantidad de almacenamiento del item. |
+        | container | Nombre del tipo de envase del item. |
+        
+        ### Códigos de error usados en esta versión de la API
+        | Código | HTTP Status | Descripción |
+        |--------|-------------|-------------|
+        | TL0003 | 400 | Los datos proporcionados no son validos. |
+        | TL0004 | 500 | El servicio no se encuentra disponible. Por favor reintente mas tarde. |
+        | TL0011 | 401 | No esta autorizado correctamente para ejecutar esta operacion. |
+        | TL9999 | 500 | Ocurrio un error inesperado. Por favor contactarse con el Soporte Tecnico. |  
+      operationId: createItem
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItemRequest'
+        required: true
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Invalid arguments
+        '401':
+          description: Not authorized
+        '404':
+          description: No found
+        '500':
+          description: Internal server error
+  /items/{id}:
+    get:
+      tags:
+        - Items invetory
+      summary: Obtiene el item por id  
+      description: |-
+        ### Acerca de la funcionalidad expuesta 
+        Permite obtener el listado de la información de los items.
+        
+        ### Data de Prueba
+        | Path Param | Desarrollo | Certificación |
+        |------------|------------|---------------|
+        | id | 1 | 1 |
+        
+        ### Precondiciones para el consumo de esta versión de la API
+        Ninguno.
+        
+        ### Usos válidos de Query Parameters
+        Ninguno.
+        
+        ### Variantes válidas del Payload (Cuerpo del mensaje) 
+        Ninguno.
+        
+        ### Lista de Valores usadas en esta versión de la API
+        Ninguno.
+        
+        ### Códigos de error usados en esta versión de la API
+        | Código | HTTP Status | Descripción |
+        |--------|-------------|-------------|
+        | TL0003 | 400 | Los datos proporcionados no son validos. |
+        | TL0004 | 500 | El servicio no se encuentra disponible. Por favor reintente mas tarde. |
+        | TL0011 | 401 | No esta autorizado correctamente para ejecutar esta operacion. |
+        | TL9999 | 500 | Ocurrio un error inesperado. Por favor contactarse con el Soporte Tecnico. |
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      operationId: listItemsByStatus
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemResponse'
+        '204':
+          description: No se encontraron resultados para los parametros enviados.              
+        '400':
+          description: Invalid arguments
+        '401':
+          description: Not authorized
+        '404':
+          description: No found
+        '500':
+          description: Internal server error
+    patch:
+      tags:
+        - Items invetory
+      summary: Actualiza el registro de un item por id.
+      description: |-
+        ### Acerca de la funcionalidad expuesta
+        Permite la actualización de un item con los campos minimos requeridos.
+        
+        ### Data de Prueba
+        | Path Param | Desarrollo | Certificación |
+        |------------|------------|---------------|
+        | id | 1 | 1 |
+        
+        ### Precondiciones para el consumo de esta versión de la API
+        Ninguno.
+        
+        ### Usos válidos de Query Parameters
+        Ninguno.
+        
+        ### Variantes válidas del Payload (Cuerpo del mensaje) 
+        ```json
+          {
+            "name": "Coca Cola",
+            "typeName": "BeBidA",
+            "capacity": "1000gR",
+            "container": "BoTelLa",
+            "requireFridge": true
+          }
+        ```
+        
+        ### Lista de Valores usadas en esta versión de la API
+        Ninguno.    
+      
+        ### Códigos de error usados en esta versión de la API
+        | Código | HTTP Status | Descripción |
+        |--------|-------------|-------------|
+        | TL0003 | 400 | Los datos proporcionados no son validos. |
+        | TL0004 | 500 | El servicio no se encuentra disponible. Por favor reintente mas tarde. |
+        | TL0011 | 401 | No esta autorizado correctamente para ejecutar esta operacion. |
+        | TL9999 | 500 | Ocurrio un error inesperado. Por favor contactarse con el Soporte Tecnico. |
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      operationId: updateItemsById
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateItemRequest'
+        required: true
+      responses:
+        '200':
+          description: OK             
+        '400':
+          description: Invalid arguments
+        '401':
+          description: Not authorized
+        '404':
+          description: No found
+        '500':
+          description: Internal server error  
+  /items/delete/{id}:        
+    patch:
+      tags:
+        - Items invetory
+      summary: Elimina el registro de un item por id.
+      description: |-
+        ### Acerca de la funcionalidad expuesta
+        Permite cambiar de estado a DELETE de un item por Id.
+        
+        ### Data de Prueba
+        | Path Param | Desarrollo | Certificación |
+        |------------|------------|---------------|
+        | id | 1 | 1 |
+        
+        ### Precondiciones para el consumo de esta versión de la API
+        Ninguno.
+        
+        ### Usos válidos de Query Parameters
+        Ninguno.
+        
+        ### Variantes válidas del Payload (Cuerpo del mensaje) 
+        Ninguno.
+        
+        ### Lista de Valores usadas en esta versión de la API
+        Ninguno.    
+      
+        ### Códigos de error usados en esta versión de la API
+        | Código | HTTP Status | Descripción |
+        |--------|-------------|-------------|
+        | TL0003 | 400 | Los datos proporcionados no son validos. |
+        | TL0004 | 500 | El servicio no se encuentra disponible. Por favor reintente mas tarde. |
+        | TL0011 | 401 | No esta autorizado correctamente para ejecutar esta operacion. |
+        | TL9999 | 500 | Ocurrio un error inesperado. Por favor contactarse con el Soporte Tecnico. |
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      operationId: deleteItemsById
+      responses:
+        '200':
+          description: OK             
+        '400':
+          description: Invalid arguments
+        '401':
+          description: Not authorized
+        '404':
+          description: No found
+        '500':
+          description: Internal server error
+  /items/create-many:
+    post:
+      tags:
+        - Items invetory
+      summary: Registra un item.
+      description: |-
+        ### Acerca de la funcionalidad expuesta
+        Permite la creación de forma aleatorias de varios items con los campos minimos requeridos.
+        
+        ### Data de Prueba
+        | Query Parameters | Desarrollo | Certificación |
+        |------------------|------------|---------------|
+        | amount | 100 | 100 |
+        
+        ### Precondiciones para el consumo de esta versión de la API
+        Ninguno.
+        
+        ### Usos válidos de Query Parameters
+        | Resultado Esperado | Path Param | Query Parameters requeridos |
+        |--------------------|------------|-----------------------------|
+        | Monto de items a generar | No | amount |
+
+        ### Variantes válidas del Payload (Cuerpo del mensaje) 
+        No aplica.
+        
+        ### Lista de Valores usadas en esta versión de la API
+        Ninguno.
+        
+        ### Descripción de atributos
+        Ninguno.
+        
+        ### Códigos de error usados en esta versión de la API
+        | Código | HTTP Status | Descripción |
+        |--------|-------------|-------------|
+        | TL0003 | 400 | Los datos proporcionados no son validos. |
+        | TL0004 | 500 | El servicio no se encuentra disponible. Por favor reintente mas tarde. |
+        | TL0011 | 401 | No esta autorizado correctamente para ejecutar esta operacion. |
+        | TL9999 | 500 | Ocurrio un error inesperado. Por favor contactarse con el Soporte Tecnico. |  
+      parameters:
+        - name: amount
+          in: query
+          description: monto de cuantos Items a generar.
+          required: true
+          schema:
+            type: integer
+            format: int32
+      operationId: createManyItems
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Invalid arguments
+        '401':
+          description: Not authorized
+        '404':
+          description: No found
+        '500':
+          description: Internal server error
+  /items/exercise1:
+    get:
+      tags:
+        - Items invetory
+      summary: Lista todos los items
+      description: |-
+        ### Acerca de la funcionalidad expuesta 
+        Genera números del 1 al 100, sustituyendo los múltiplos de 3 por el palabro “VIN” y, a su vez,
+        los múltiplos de 5 por “CLE”. Para los casos que, al tiempo, son múltiplos de 3 y 5, utiliza el
+        combinado “VINCLE”.
+        
+        ### Data de Prueba
+        Ninguno.
+        
+        ### Precondiciones para el consumo de esta versión de la API
+        Ninguno.
+        
+        ### Usos válidos de Query Parameters
+        Ninguno.
+        
+        ### Variantes válidas del Payload (Cuerpo del mensaje) 
+        Ninguno.
+        
+        ### Lista de Valores usadas en esta versión de la API
+        Ninguno.
+        
+        ### Códigos de error usados en esta versión de la API
+        | Código | HTTP Status | Descripción |
+        |--------|-------------|-------------|
+        | TL0003 | 400 | Los datos proporcionados no son validos. |
+        | TL0004 | 500 | El servicio no se encuentra disponible. Por favor reintente mas tarde. |
+        | TL0011 | 401 | No esta autorizado correctamente para ejecutar esta operacion. |
+        | TL9999 | 500 | Ocurrio un error inesperado. Por favor contactarse con el Soporte Tecnico. |
+      operationId: exercise1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: integer    
+        '204':
+          description: No se encontraron resultados para los parametros enviados.        
+        '400':
+          description: Invalid arguments
+        '401':
+          description: Not authorized
+        '404':
+          description: No found
+        '500':
+          description: Internal server error
+    
+    
+components:
+  schemas:
+    ItemResponse:
+      type: object
+      properties:
+        name:
+          type: string
+          example: 'Inca Kola'
+          description: Nombre del item.
+        typeName:
+          type: string
+          example: 'Bebida'
+          description: Nombre del tipo del item.
+        container:
+          type: string
+          example: 'Botella'
+          description: Nombre del tipo de envase del item.
+        capacity:
+          type: string
+          example: '1000gr'
+          description: Cantidad de almacenamiento del item.
+        requireFridge:
+          type: boolean
+          example: true
+          description: precisa si necesita nevera.
+        lastUpdateDateTime:
+          type: string
+          format: date
+          example: '20:14:08 lunes 06 febrero 2023'
+          description: Fecha y hora la ultima modificación.
+        creationDateTime:
+          type: string
+          format: date
+          example: '20:14:08 lunes 06 febrero 2023'
+          description: Fecha y hora de la creación del item.
+        clientName:
+          type: string
+          example: 'Ahron'
+          description: El nombre del cliente que ha lanzado el comando de creación.
+        status:
+          type: string
+          example: 'CREATED'
+          description: Estado del producto.
+    ItemRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          example: 'Inca Kola'
+          description: Nombre del item.
+        clientName:
+          type: string
+          example: 'Ahron'
+          description: El nombre del cliente que ha lanzado el comando de creación.
+        typeName:
+          type: string
+          enum: ['BEBIDA', 'COMIDA', 'SALSAS', 'ESPECIAS']
+          example: 'Bebida'
+          description: Nombre del tipo del item.
+        capacity:
+          type: string
+          enum: ['1000GR', '100GR']
+          example: '1000gr'
+          description: Cantidad de almacenamiento del item.  
+        container:
+          type: string
+          enum: ['BOTELLA', 'CAJA']
+          example: 'Botella'
+          description: Nombre del tipo de envase del item.  
+    UpdateItemRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          example: 'Coca Cola'
+          description: Nombre del item.
+        typeName:
+          type: string
+          enum: ['BEBIDA', 'COMIDA', 'SALSAS', 'ESPECIAS']
+          example: 'Bebida'
+          description: Nombre del tipo del item.
+        capacity:
+          type: string
+          enum: ['1000GR', '100GR']
+          example: '1000gr'
+          description: Cantidad de almacenamiento del item.  
+        container:
+          type: string
+          enum: ['BOTELLA', 'CAJA']
+          example: 'Botella'
+          description: Nombre del tipo de envase del item.
+        requireFridge:
+          type: boolean
+          example: true
+          description: precisa si necesita nevera.
